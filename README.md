@@ -8,12 +8,12 @@ Android requires Android 11 or later. The iOS ZIP runs in Xcode Simulator on a M
 
 ## Watch automatic capture
 
-These silent Android recordings show the recorder operating an offline sample with fictional conversations and activities. Select a preview to play the demo in your browser.
+The trajectory excerpt shows the production Muse Android app with account details and unrelated content masked. The screenshot demonstration uses the offline sample. Select a preview to play the demo in your browser.
 
-| Trajectory capture · 1 min 31 s | Screenshot capture · 54 s |
+| Trajectory capture · 35 s | Screenshot capture · 54 s |
 | --- | --- |
-| [<img src="docs/demos/trajectory-capture.png" width="200" alt="An open trajectory step in the Atlas sample">](https://wryan2986.github.io/walkthrough-capture-android/) | [<img src="docs/demos/screenshot-capture.png" width="200" alt="The edge pulse and saved count as a table is captured">](https://wryan2986.github.io/walkthrough-capture-android/screenshots.html) |
-| [Watch trajectory capture](https://wryan2986.github.io/walkthrough-capture-android/). Select two activities and watch the recorder open all four step details in sequence. | [Watch screenshot capture](https://wryan2986.github.io/walkthrough-capture-android/screenshots.html). Watch a collapsed section open, a table scroll sideways and the edge pulse as the recorder saves 15 screenshots to a ZIP. |
+| [<img src="docs/demos/muse-trajectory.png" width="200" alt="A ticket calculation in a redacted Muse trajectory">](https://wryan2986.github.io/walkthrough-capture-android/) | [<img src="docs/demos/screenshot-capture.png" width="200" alt="The edge pulse and saved count as a table is captured">](https://wryan2986.github.io/walkthrough-capture-android/screenshots.html) |
+| [Watch trajectory capture](https://wryan2986.github.io/walkthrough-capture-android/). Watch two Muse ticket calculations open in sequence, with the recorder’s pre-tap highlights. | [Watch screenshot capture](https://wryan2986.github.io/walkthrough-capture-android/screenshots.html). Watch a collapsed section open, a table scroll sideways and the edge pulse as the recorder saves 15 screenshots to a ZIP. |
 
 ## Android
 
