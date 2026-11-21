@@ -1,0 +1,6 @@
+Captures/
+DerivedData/
+*.xcresult/
+**/xcuserdata/
+__pycache__/
+.DS_Store
