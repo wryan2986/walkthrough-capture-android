@@ -2,7 +2,7 @@
 
 Walkthrough Capture turns an on-screen conversation into a ZIP of overlapping screenshots and records selected activities as one continuous, silent video. It uses Android Accessibility to navigate exposed controls. Capture, previews and masking run on the device. The app requests neither internet nor microphone permission.
 
-[**Download the Android APK**](https://github.com/wryan2986/walkthrough-capture-android/releases/download/v0.11/Walkthrough-Capture-Android-0.11.apk) · [Download the iOS Simulator app](https://github.com/wryan2986/walkthrough-capture-android/releases/download/v0.11/Walkthrough-Capture-iOS-Simulator.zip)
+[**Download the Android APK**](https://github.com/wryan2986/walkthrough-capture-android/releases/latest/download/Walkthrough-Capture-Android.apk) · [Download the iOS Simulator app](https://github.com/wryan2986/walkthrough-capture-android/releases/latest/download/Walkthrough-Capture-iOS-Simulator.zip)
 
 Android requires Android 11 or later. The iOS ZIP runs in Xcode Simulator on a Mac.
 
