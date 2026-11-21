@@ -2,6 +2,15 @@
 
 Walkthrough Capture turns an on-screen conversation into a ZIP of overlapping screenshots and records selected activities as one continuous, silent video. It uses Android Accessibility to navigate exposed controls. Capture, previews and masking run on the device. The app requests neither internet nor microphone permission.
 
+## Watch automatic capture
+
+These silent Android recordings show the recorder operating an offline sample with fictional conversations and activities. Select a preview to watch the MP4.
+
+| Trajectory capture · 1 min 31 s | Screenshot capture · 54 s |
+| --- | --- |
+| [<img src="docs/demos/trajectory-capture.png" width="200" alt="An open trajectory step in the Atlas sample">](https://raw.githubusercontent.com/wryan2986/walkthrough-capture-android/main/docs/demos/trajectory-capture.mp4) | [<img src="docs/demos/screenshot-capture.png" width="200" alt="The edge pulse and saved count as a table is captured">](https://raw.githubusercontent.com/wryan2986/walkthrough-capture-android/main/docs/demos/screenshot-capture.mp4) |
+| [Watch trajectory capture](https://raw.githubusercontent.com/wryan2986/walkthrough-capture-android/main/docs/demos/trajectory-capture.mp4). Select two activities and watch the recorder open all four step details in sequence. | [Watch screenshot capture](https://raw.githubusercontent.com/wryan2986/walkthrough-capture-android/main/docs/demos/screenshot-capture.mp4). Watch a collapsed section open, a table scroll sideways and the edge pulse as the recorder saves 15 screenshots to a ZIP. |
+
 ## Use the recorder
 
 1. Install on Android 11 or later. In **Set up**, enable the Walkthrough Capture accessibility service.
