@@ -25,10 +25,11 @@ final class ConversationHistory {
     private enum Phase { START, REWIND, READ, OPENING, RETURNING }
     private enum Job { OLDER, DOWN, INITIAL_LEFT, RIGHT, RESTORE_LEFT }
     private static final class Page {
-        boolean saved; int initial,lane; boolean returningLeft;
+        boolean saved; int initial,lane,rightSteps,restoreSteps; boolean returningLeft;
         ConversationPixels canonical;
         final List<String> paths=new ArrayList<>();
-        void reset(){saved=false;canonical=null;initial=0;lane=0;returningLeft=false;paths.clear();}
+        void nextLane(){lane++;returningLeft=false;rightSteps=0;restoreSteps=0;}
+        void reset(){saved=false;canonical=null;initial=0;lane=0;rightSteps=0;restoreSteps=0;returningLeft=false;paths.clear();}
     }
     private static final class CoveredLane {
         final String content;
@@ -96,7 +97,7 @@ final class ConversationHistory {
     private Motion motion;
     private Motion recovering;
     private ConversationPixels recoveryLast;
-    private int recoveryStalls,unverifiedLanes;
+    private int recoveryStalls,recoveryAttempts,unverifiedLanes;
     private int edgeWait,verticalAt,viewportCount,horizontalCount,opened,disabled,menuChoices,disabledChoices,declined;
     private int menuPages,expanded,rewound,knownRows=-1,firstWindow=-1,waits;
     private int verticalMoves,horizontalMoves,minVerticalOverlap=100,minHorizontalOverlap=100;
@@ -204,10 +205,18 @@ final class ConversationHistory {
                 page.returningLeft=true;
             }
             if(ConversationScene.direction(lane,WalkTree.LEFT)!=0 && !edgeKnown(lane,WalkTree.LEFT)){
+                Integer offset=scroll.position(lane,WalkTree.LEFT);
+                if(offset!=null && offset==0 && page.canonical.same(raw,box) && page.canonical.sameCrop(raw,box,box)) {
+                    if(device.releasePointer()){waitFor("Confirming the restored carousel origin.");return;}
+                    remember(scene,lane,area,raw);page.nextLane();continue;
+                }
+                if(++page.restoreSteps>page.rightSteps*2+8) {
+                    beginOriginRecovery(new Motion(raw,box,Job.RESTORE_LEFT,WalkTree.LEFT,lane,scroll));return;
+                }
                 move(raw,lane,box,Job.RESTORE_LEFT,WalkTree.LEFT,.38f);return;
             }
             if(device.releasePointer()){waitFor("Confirming the restored carousel origin.");return;}
-            remember(scene,lane,area,raw);page.lane++;page.returningLeft=false;
+            remember(scene,lane,area,raw);page.nextLane();
         }
         if(panel) {if(readPanel(scene,scope,area,raw))return;}
         else for(ConversationScene.Control c:scene.controls()) {
@@ -316,7 +325,7 @@ final class ConversationHistory {
                 verticalMoves++;minVerticalOverlap=Math.min(minVerticalOverlap,100-(int)Math.ceil(distance*100.0/area.height()));
             }
             if(m.job==Job.RIGHT) {
-                saveColumn=true;horizontalMoves++;
+                saveColumn=true;horizontalMoves++;page.rightSteps++;
                 minHorizontalOverlap=Math.min(minHorizontalOverlap,100-(int)Math.ceil(distance*100.0/area.width()));
             }
             return true;
@@ -341,7 +350,7 @@ final class ConversationHistory {
         return false;
     }
     private boolean beginOriginRecovery(Motion failed) {
-        recovering=failed;motion=null;recoveryLast=null;recoveryStalls=0;scroll.release();saveColumn=false;
+        recovering=failed;motion=null;recoveryLast=null;recoveryStalls=0;recoveryAttempts=0;scroll.release();saveColumn=false;
         if(failed.job==Job.RIGHT)unverifiedLanes++;
         device.releasePointer();device.pause("Restoring the horizontal origin before continuing.",660);return false;
     }
@@ -355,14 +364,29 @@ final class ConversationHistory {
             if(failed.job==Job.INITIAL_LEFT)page.initial++;
             else {
                 if(failed.job==Job.RESTORE_LEFT)remember(scene,pane,area,raw);
-                page.lane++;page.returningLeft=false;
+                page.nextLane();
             }
             return true;
         }
         if(recoveryLast!=null && recoveryLast.same(raw,box))recoveryStalls++;else recoveryStalls=0;
-        if(recoveryStalls>2 || left)fail("The horizontal origin could not be verified, so the remaining chat was left incomplete.");
+        if(++recoveryAttempts>8 || recoveryStalls>2 || left) {
+            // A misreporting carousel can keep moving laterally without ever
+            // returning to its origin. Continue only if independent message
+            // pixels above or below the pane prove the parent is still in place.
+            ConversationPixels anchor=page.canonical==null?failed.before:page.canonical;
+            Rect above=new Rect(area.left,area.top,area.right,box.top);
+            Rect below=new Rect(area.left,box.bottom,area.right,area.bottom);
+            if(!(anchor.same(raw,above) && anchor.sameCrop(raw,above,above)) &&
+                    !(anchor.same(raw,below) && anchor.sameCrop(raw,below,below)))
+                fail("The horizontal origin and the surrounding chat position could not be verified.");
+            if(failed.job!=Job.RIGHT)unverifiedLanes++;
+            if(failed.job==Job.INITIAL_LEFT)page.paths.remove(page.initial);else page.nextLane();
+            scroll.release();recovering=null;recoveryLast=null;
+            device.trace("continued beyond unverified horizontal pane after "+recoveryAttempts+" bounded recovery attempts");
+            return true;
+        }
         recoveryLast=raw;
-        if(!device.nativeScroll(pane,WalkTree.LEFT))device.swipe(pane,box,WalkTree.LEFT,.33f);
+        if(recoveryAttempts%2==0 || !device.nativeScroll(pane,WalkTree.LEFT))device.swipe(pane,box,WalkTree.LEFT,.33f);
         return false;
     }
     private boolean already(String token,String role,int coordinate) {
