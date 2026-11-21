@@ -1,0 +1,44 @@
+<resources>
+    <item type="id" name="capture_detail_preview"/>
+    <item type="id" name="library_thumbnail"/>
+    <item type="id" name="privacy_canvas"/>
+    <item type="id" name="privacy_region"/>
+    <item type="id" name="privacy_terms"/>
+    <item type="id" name="chat_privacy_masks"/>
+    <item type="id" name="video_privacy_masks"/>
+    <item type="id" name="tap_highlight"/>
+    <item type="id" name="highlight_sample"/>
+    <item type="id" name="highlight_duration"/>
+    <item type="id" name="review_list"/>
+    <item type="id" name="review_row"/>
+    <item type="id" name="review_checkbox"/>
+    <item type="id" name="review_title"/>
+    <item type="id" name="review_count"/>
+    <item type="id" name="review_all"/>
+    <item type="id" name="review_start"/>
+    <item type="id" name="capture_target"/>
+    <item type="id" name="method_manual"/>
+    <item type="id" name="method_automatic"/>
+    <item type="id" name="manual_screenshots"/>
+    <item type="id" name="manual_video"/>
+    <item type="id" name="manual_guided"/>
+    <item type="id" name="manual_freehand"/>
+    <item type="id" name="manual_start"/>
+    <item type="id" name="manual_show_controls"/>
+    <item type="id" name="manual_privacy_masks"/>
+    <item type="id" name="capture_mode_trajectory"/>
+    <item type="id" name="capture_mode_conversation"/>
+    <item type="id" name="find_trajectories"/>
+    <item type="id" name="capture_conversation"/>
+    <item type="id" name="screenshot_feedback"/>
+    <item type="id" name="screenshot_feedback_haptic"/>
+    <item type="id" name="screenshot_feedback_sample"/>
+    <style name="CaptureTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:colorAccent">#116553</item>
+        <item name="android:colorControlActivated">#116553</item>
+        <item name="android:statusBarColor">#103e35</item>
+        <item name="android:navigationBarColor">#ffffff</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>

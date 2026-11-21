@@ -1,0 +1,14 @@
+.gradle/
+.idea/
+**/build/
+local.properties
+*.iml
+*.jks
+*.keystore
+*.p12
+*.apk
+*.aab
+.DS_Store
+__pycache__/
+app/src/localPreview/
+docs/local-preview/

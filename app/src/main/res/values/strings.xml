@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Walkthrough Capture</string>
+    <string name="access_description">Automatic capture reads visible controls to open details, scroll and capture the views you select. It saves screenshots or a silent recording on this device. Inspection shows control labels and identifiers.</string>
+</resources>

@@ -1,0 +1,20 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'local.walkthrough'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'local.walkthrough'
+        minSdk 30
+        targetSdk 35
+        versionCode 12
+        versionName '0.11'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
