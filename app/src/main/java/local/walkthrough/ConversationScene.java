@@ -114,6 +114,15 @@ final class ConversationScene {
         return false;
     }
     static String role(WalkTree.Item m) { return m.id.equals("hatch-message-user")?"user":"assistant"; }
+    static String readableText(WalkTree tree,WalkTree.Item message) {
+        StringBuilder text=new StringBuilder();
+        for(WalkTree.Item n:tree.all)if(n.inside(message) && n.node.getChildCount()==0 && !n.has(WalkTree.CLICK)) {
+            CharSequence words=n.node.getText();
+            if(words!=null && !disclosureLabel(norm(words.toString())))text.append(words).append(' ');
+            if(text.length()>64000)break;
+        }
+        return text.toString().trim().replaceAll("\\s+"," ");
+    }
     static String contentMark(WalkTree tree,WalkTree.Item msg) {
         // Native IDs are shared across chat bubbles. Keep private text out of files and status.
         StringBuilder b=new StringBuilder(role(msg));

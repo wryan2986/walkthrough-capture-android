@@ -41,6 +41,19 @@ final class ConversationOverlap {
         }
         return n>0 && diff<n*10L && mismatches*9<n;
     }
+    /** Check the entire predicted overlap when a native horizontal offset moves through empty cells. */
+    boolean equalTranslatedOverlap(ConversationOverlap next,Box box,int dx) {
+        if(width!=next.width || height!=next.height || box.empty() || dx==0 || Math.abs(dx)>box.width()*.60)return false;
+        int left=box.left+Math.max(0,-dx)+1,right=box.right-Math.max(0,dx)-1;
+        int top=box.top+1,bottom=box.bottom-1;
+        if(right-left<12 || bottom-top<5)return false;
+        int count=0,changed=0;long difference=0;
+        for(int y=top;y<bottom;y++)for(int x=left;x<right;x++) {
+            int i=y*width+x,d=Math.abs((gray[i+dx]&255)-(next.gray[i]&255));
+            count++;difference+=d;if(d>22)changed++;
+        }
+        return difference<count*1.4 && changed<=Math.max(2,count/250);
+    }
     /** Returns physical displacement only when older and newer image regions are in register. */
     int displacement(ConversationOverlap next,Box box,boolean horizontal,int sign,float scale,Integer expected) {
         if(width!=next.width || height!=next.height)return -1;

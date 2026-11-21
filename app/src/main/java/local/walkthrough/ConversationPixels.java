@@ -25,6 +25,9 @@ final class ConversationPixels {
     }
     boolean hasVisibleContent(Rect area){return samples.hasVisibleContent(scaled(area));}
     boolean same(ConversationPixels next,Rect physical) { return samples.same(next.samples,scaled(physical)); }
+    boolean equalTranslatedOverlap(ConversationPixels next,Rect physical,int offset) {
+        return samples.equalTranslatedOverlap(next.samples,scaled(physical),Math.round(offset*(float)width/originalWidth));
+    }
     int displacement(ConversationPixels next,Rect physical,int direction,Integer expected) {
         boolean horizontal=WalkScroll.horizontal(direction);
         float scale=horizontal?(float)width/originalWidth:(float)height/originalHeight;

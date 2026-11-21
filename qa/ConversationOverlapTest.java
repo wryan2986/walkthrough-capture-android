@@ -35,6 +35,10 @@ public final class ConversationOverlapTest {
         if(!start.sameCrop(down,originalStrip,translatedStrip) || start.sameCrop(right,originalStrip,translatedStrip))
             throw new AssertionError("Complete horizontal origin must match after vertical repositioning");
         ConversationOverlap blank=page(0,0,true);
+        if(!blank.equalTranslatedOverlap(blank,VIEW,24) || !down.equalTranslatedOverlap(right,VIEW,43)
+                || down.equalTranslatedOverlap(down,VIEW,43) || down.equalTranslatedOverlap(right,VIEW,80)
+                || down.equalTranslatedOverlap(right,VIEW,-43) || blank.equalTranslatedOverlap(start,VIEW,24))
+            throw new AssertionError("Native horizontal delta must agree with all overlapping pixels.");
         if(!start.hasVisibleContent(VIEW) || blank.hasVisibleContent(VIEW))throw new AssertionError("Protected/blank screen");
         eq(blank.displacement(blank,VIEW,false,1,1,10),-1);
         System.out.println("Conversation overlap: forward and reverse for both axes, false jumps, blank and stationary views passed.");

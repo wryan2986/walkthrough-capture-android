@@ -109,6 +109,9 @@ final class ConversationHistory {
     private ConversationPixels origin,edgeFrame;
     private Rect parentArea;
     private String originRole="";
+    private int originalTreeHash;
+    private String originMessagePath,originalWords;
+    private int originMessageTop;
     private int originWindow=-1;
     private boolean physicalRewind;
     boolean readingBack(){return !panel && (phase==Phase.START || phase==Phase.REWIND);}
@@ -135,7 +138,7 @@ final class ConversationHistory {
             }
             firstWindow=scene.list.node.getWindowId();phase=Phase.REWIND;waits=0;
         }
-        if(phase==Phase.OPENING){openedState(scene,raw);return;}
+        if(phase==Phase.OPENING){openedState(scene,raw,candidate);return;}
         if(phase==Phase.RETURNING){returned(scene,raw);return;}
         if(!panel && (scene.chat==null || scene.list==null || scene.list.node.getWindowId()!=firstWindow))
             fail("The active conversation changed during capture.");
@@ -218,6 +221,10 @@ final class ConversationHistory {
             origin=raw;parentArea=new Rect(area);originWindow=c.node.node.getWindowId();originRole=ConversationScene.role(c.message);
             actionKind=c.kind;waits=0;
             if(!c.node.node.performAction(c.action)){declined++;continue;}
+            originMessagePath=c.message.path;originMessageTop=c.message.bounds.top;
+            originalWords=c.kind==ConversationScene.Kind.DISCLOSURE?ConversationScene.readableText(tree,c.message):"";
+            originalTreeHash=tree.signature.hashCode();
+            device.trace("message control kind="+c.kind+" action="+c.action+" role="+originRole+" view="+viewportCount);
             phase=Phase.OPENING;waitFor("Verifying the exposed message control.");return;
         }
         if(!panel && vertical!=null) {
@@ -291,6 +298,11 @@ final class ConversationHistory {
         }
         Integer expected=m.oldPosition!=null && after!=null?Math.abs(m.oldPosition-after):null;
         int distance=stationary?-1:m.before.displacement(raw,area,m.direction,expected);
+        // Repeated or blank cells have no unique visual displacement. Require a
+        // scroll event from this exact pane, a bounded native delta and translated
+        // pixel agreement throughout the overlapping portion before advancing.
+        if(distance<=0 && scroll.moved && m.job==Job.RIGHT && m.oldPosition!=null && after!=null
+                && after>m.oldPosition && expected<=area.width()*.60 && m.before.equalTranslatedOverlap(raw,area,expected))distance=expected;
         if(distance<=0 && WalkScroll.horizontal(m.direction) && nativeEdge && expected!=null && expected>0 && expected<=4
                 && (stationary || m.before.sameCrop(raw,area,area))
                 && ((m.direction==WalkTree.RIGHT && after>m.oldPosition) || (m.direction==WalkTree.LEFT && after<m.oldPosition)))
@@ -357,7 +369,7 @@ final class ConversationHistory {
         for(Seen s:controlsSeen)if(s.token.equals(token) && s.role.equals(role) && Math.abs(s.coordinate-coordinate)<54)return true;
         return false;
     }
-    private void openedState(ConversationScene scene,ConversationPixels raw) {
+    private void openedState(ConversationScene scene,ConversationPixels raw,File candidate) throws IOException {
         WalkTree.Item dialog=scene.modalRoot();
         if(pendingPanel!=null){verifyNested(scene,dialog,raw);return;}
         if(dialog!=null || scene.chat==null && scene.tree.all.get(0).node.getWindowId()!=originWindow) {
@@ -367,10 +379,16 @@ final class ConversationHistory {
         }
         if(scene.chat!=null && actionKind==ConversationScene.Kind.DISCLOSURE && !origin.same(raw,parentArea)) {
             boolean inline=false;
-            for(WalkTree.Item n:scene.tree.items) {
-                String s=ConversationScene.controlLabel(n);
-                if(s.matches("show less|see less|collapse(?: details| thinking| reasoning)?|hide (?:details|thinking|thoughts|reasoning)") || n.has(WalkTree.COLLAPSE)) {
-                    for(WalkTree.Item p=n;p!=null;p=p.parent)if(ConversationScene.isMessage(p) && ConversationScene.role(p).equals(originRole)) {inline=true;break;}
+            for(WalkTree.Item m:scene.messages)if(m.path.equals(originMessagePath) && ConversationScene.role(m).equals(originRole)) {
+                for(WalkTree.Item n:scene.tree.items)if(n.inside(m) && collapseLabel(n)){inline=true;break;}
+                if(!inline && Math.abs(m.bounds.top-originMessageTop)<24) {
+                    // Some one-way “Read more” controls vanish once their original
+                    // text is extended in place. Match the same row and its text.
+                    String before=originalWords.replaceFirst("[.…\\s]+$","");
+                    String now=ConversationScene.readableText(scene.tree,m);
+                    boolean remaining=false;
+                    for(ConversationScene.Control c:scene.controls())if(c.message==m && c.kind==actionKind){remaining=true;break;}
+                    inline=!remaining && before.length()>=24 && now.length()>=before.length()+16 && now.startsWith(before);
                 }
             }
             if(inline) {
@@ -379,9 +397,16 @@ final class ConversationHistory {
             }
         }
         if(++waits<4){waitFor("Waiting for the message control to settle.");return;}
+        device.trace("unverified control kind="+actionKind+" chat="+(scene.chat!=null)+" list="+(scene.list!=null)
+                +" sameWindow="+(scene.list!=null && scene.list.node.getWindowId()==firstWindow)
+                +" sameTree="+(scene.tree.signature.hashCode()==originalTreeHash)+" rows="+scene.messages.size()+" nodes="+scene.tree.items.size()
+                +" modal="+(dialog!=null)+" samePixels="+origin.same(raw,parentArea));
         if(scene.chat!=null && origin.same(raw,parentArea)) {
             declined++;phase=Phase.READ;origin=null;waits=0;waitFor("Continuing the visible conversation.");return;
         }
+        declined++;
+        if(scene.chat!=null && scene.list!=null && scene.list.node.getWindowId()==firstWindow && raw.hasVisibleContent(parentArea))
+            device.save(candidate);
         fail("The message control opened an unrecognized state; its coverage could not be verified.");
     }
     private void returned(ConversationScene scene,ConversationPixels raw) {
