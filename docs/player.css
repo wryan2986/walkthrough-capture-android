@@ -54,3 +54,8 @@ footer { width: min(100% - 3rem, 65rem); margin: 0 auto 1.5rem; color: #51675f; 
   video { width: min(100%, 33rem, 38vh + 2rem); }
 }
 @media (max-width: 350px) { nav a { flex-wrap: wrap; } }
+
+.header-links { display: flex; align-items: center; gap: 1rem; }
+.download { background: var(--ink-green); color: white; text-decoration: none; border-radius: .5rem; padding: .55rem .85rem; }
+.download:hover { background: #064b3b; }
+@media (max-width: 560px) { .header-links .repo { display: none; } .header-links .download { font-size: .82rem; padding: .55rem .65rem; } }
