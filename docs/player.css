@@ -37,7 +37,7 @@ time { font-variant-numeric: tabular-nums; font-size: .9rem; font-weight: 480; }
 .stage { display: grid; place-items: center; padding: clamp(.8rem, 2vw, 1.6rem); border-radius: 1.4rem; background: #e1ebe5; }
 video {
   display: block; width: min(100%, 33vh + 2.5rem, 22rem); height: auto; object-fit: contain;
-  background: #12231e; border-radius: .65rem; box-shadow: 0 .4rem 1.3rem #193e2d20;
+  background: #12231e; box-shadow: 0 .4rem 1.3rem #193e2d20;
 }
 footer { width: min(100% - 3rem, 65rem); margin: 0 auto 1.5rem; color: #51675f; font-size: .86rem; }
 @media (max-width: 710px) {

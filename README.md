@@ -8,12 +8,12 @@ Android requires Android 11 or later. The iOS ZIP runs in Xcode Simulator on a M
 
 ## Watch automatic capture
 
-These silent recordings show automatic capture in the production Muse Android app. Account details and unrelated content are masked. Select a preview to watch in your browser.
+Both silent demos show the full Android screen in production Muse. Select either preview to watch in your browser.
 
-| Trajectory capture · 35 s | Screenshot capture · 14 s |
+| Trajectory capture · 0:44 | Screenshot capture · 0:14 |
 | --- | --- |
-| [<img src="docs/demos/muse-trajectory.png" width="200" alt="Privacy-redacted Muse trajectory capture">](https://wryan2986.github.io/walkthrough-capture-android/) | [<img src="docs/demos/muse-screenshots.png" width="200" alt="Privacy-redacted Muse screenshot capture">](https://wryan2986.github.io/walkthrough-capture-android/screenshots.html) |
-| [Watch trajectory capture](https://wryan2986.github.io/walkthrough-capture-android/). Follow two selected activities from the pre-tap highlights to the ticket calculations in their step details. | [Watch screenshot capture](https://wryan2986.github.io/walkthrough-capture-android/screenshots.html). Watch a vehicle-budget table scroll vertically and sideways, with nine visible save pulses. |
+| [<img src="docs/demos/muse-trajectory.png" width="200" alt="Preview of Muse trajectory recording">](https://wryan2986.github.io/walkthrough-capture-android/) | [<img src="docs/demos/muse-screenshots.png" width="200" alt="Preview of a screenshot save in Muse">](https://wryan2986.github.io/walkthrough-capture-android/screenshots.html) |
+| [Watch trajectory capture](https://wryan2986.github.io/walkthrough-capture-android/). Follow the focus outline as the recorder opens two ticket calculations. You can see the step list, the taps, and each calculation’s result. | [Watch screenshot capture](https://wryan2986.github.io/walkthrough-capture-android/screenshots.html). Watch the recorder scroll down and sideways through a fictional car budget. Each of the nine screenshots triggers an edge pulse, with the counter running from Saved 143 through Saved 151. |
 
 ## Android
 
